@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi, afterEach } from 'vitest'
 import { AuthProvider } from '../src/lib/auth'
@@ -27,6 +27,7 @@ function renderRuta(ruta: string) {
 }
 
 afterEach(() => {
+  cleanup()
   localStorage.clear()
   vi.unstubAllGlobals()
 })

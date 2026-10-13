@@ -5,7 +5,8 @@ import { AuthProvider } from './lib/auth'
 import AccessDenied from './pages/auth/AccessDenied'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
-import Usuarios from './pages/admin/Usuarios'
+import Admin from './pages/admin/Admin'
+import Menu from './pages/clientes/Menu'
 import Placeholder from './pages/Placeholder'
 
 function conRol(roles: ('administrador' | 'cajero' | 'cocinero' | 'usuario')[], pagina: React.ReactNode) {
@@ -23,10 +24,10 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
         <Route path="/sin-acceso" element={<AccessDenied />} />
-        <Route path="/admin/*" element={conRol(['administrador'], <Usuarios />)} />
+        <Route path="/admin/*" element={conRol(['administrador'], <Admin />)} />
         <Route path="/caja" element={conRol(['cajero'], <Placeholder titulo="Caja" />)} />
         <Route path="/cocina" element={conRol(['cocinero'], <Placeholder titulo="Cocina" />)} />
-        <Route path="/menu" element={conRol(['usuario'], <Placeholder titulo="Menú del día" />)} />
+        <Route path="/menu" element={conRol(['usuario'], <Menu />)} />
         <Route path="/mis-pedidos" element={conRol(['usuario'], <Placeholder titulo="Mis pedidos" />)} />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route
