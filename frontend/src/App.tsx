@@ -7,8 +7,10 @@ import AccessDenied from './pages/auth/AccessDenied'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import Admin from './pages/admin/Admin'
+import Caja from './pages/caja/Caja'
 import Checkout from './pages/clientes/Checkout'
 import Confirmacion from './pages/clientes/Confirmacion'
+import Cocina from './pages/cocina/Cocina'
 import Menu from './pages/clientes/Menu'
 import Placeholder from './pages/Placeholder'
 
@@ -29,8 +31,8 @@ export default function App() {
         <Route path="/registro" element={<Register />} />
         <Route path="/sin-acceso" element={<AccessDenied />} />
         <Route path="/admin/*" element={conRol(['administrador'], <Admin />)} />
-        <Route path="/caja" element={conRol(['cajero'], <Placeholder titulo="Caja" />)} />
-        <Route path="/cocina" element={conRol(['cocinero'], <Placeholder titulo="Cocina" />)} />
+        <Route path="/caja" element={conRol(['cajero', 'administrador'], <Caja />)} />
+        <Route path="/cocina" element={conRol(['cocinero', 'administrador'], <Cocina />)} />
         <Route path="/menu" element={conRol(['usuario'], <Menu />)} />
         <Route path="/pedido/nuevo" element={conRol(['usuario'], <Checkout />)} />
         <Route path="/pedido/:id" element={conRol(['usuario'], <Confirmacion />)} />
