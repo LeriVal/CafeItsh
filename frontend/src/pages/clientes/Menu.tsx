@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { ApiError } from '../../lib/api'
+import { useCart } from '../../lib/carrito'
 import { fetchMenu } from '../../lib/menu'
 import type { MenuDia } from '../../lib/menu'
 
@@ -12,6 +14,7 @@ export default function Menu() {
   const [menu, setMenu] = useState<MenuDia | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [cargando, setCargando] = useState(true)
+  const { items, total, conteo, agregar, fijarCantidad } = useCart()
 
   useEffect(() => {
     fetchMenu()
@@ -73,9 +76,58 @@ export default function Menu() {
                 </span>
               )}
             </div>
+            {l.disponible &&
+              (() => {
+                const enCarrito = items.find((i) => i.menuDiaId === l.id)
+                if (!enCarrito) {
+                  return (
+                    <button
+                      className="btn-secondary mt-2 min-h-[44px]"
+                      type="button"
+                      onClick={() =>
+                        agregar({ menuDiaId: l.id, nombre: l.platillo.nombre, precio: Number(l.precio) })
+                      }
+                      aria-label={`Agregar ${l.platillo.nombre}`}
+                    >
+                      Agregar
+                    </button>
+                  )
+                }
+                return (
+                  <div className="mt-2 flex items-center gap-3">
+                    <button
+                      className="btn-secondary min-h-[44px] min-w-[44px]"
+                      type="button"
+                      onClick={() => fijarCantidad(l.id, enCarrito.cantidad - 1)}
+                      aria-label={`Quitar uno de ${l.platillo.nombre}`}
+                    >
+                      −
+                    </button>
+                    <strong aria-label={`Cantidad de ${l.platillo.nombre}`}>
+                      {enCarrito.cantidad}
+                    </strong>
+                    <button
+                      className="btn-secondary min-h-[44px] min-w-[44px]"
+                      type="button"
+                      onClick={() => fijarCantidad(l.id, enCarrito.cantidad + 1)}
+                      aria-label={`Agregar uno más de ${l.platillo.nombre}`}
+                    >
+                      +
+                    </button>
+                  </div>
+                )
+              })()}
           </article>
         ))}
       </div>
+      {conteo > 0 && (
+        <Link
+          to="/pedido/nuevo"
+          className="btn-primary fixed bottom-4 left-1/2 flex min-h-[48px] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 items-center justify-center"
+        >
+          Revisar pedido · Total: ${total.toFixed(2)}
+        </Link>
+      )}
     </div>
   )
 }

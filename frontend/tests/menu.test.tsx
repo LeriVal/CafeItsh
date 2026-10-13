@@ -2,6 +2,7 @@ import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it, vi, afterEach } from 'vitest'
 import { AuthProvider } from '../src/lib/auth'
+import { CartProvider } from '../src/lib/carrito'
 import Menu from '../src/pages/clientes/Menu'
 
 const MENU = {
@@ -52,7 +53,9 @@ function renderMenu() {
   return render(
     <MemoryRouter>
       <AuthProvider>
-        <Menu />
+        <CartProvider>
+          <Menu />
+        </CartProvider>
       </AuthProvider>
     </MemoryRouter>,
   )
