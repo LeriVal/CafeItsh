@@ -1,6 +1,5 @@
-# Dependencias
+# Dependencias (se versiona package-lock.json, nunca node_modules/)
 node_modules/
-package-lock.json
 
 # Entorno y secretos (constitución: nunca en el repo)
 .env
