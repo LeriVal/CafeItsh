@@ -1,0 +1,24 @@
+# Dependencias
+node_modules/
+package-lock.json
+
+# Entorno y secretos (constitución: nunca en el repo)
+.env
+.env.local
+.env.*.local
+
+# Build
+dist/
+build/
+*.tsbuildinfo
+
+# Logs y cobertura
+*.log
+coverage/
+.nyc_output/
+
+# SO / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
