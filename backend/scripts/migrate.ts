@@ -44,6 +44,7 @@ async function main(): Promise<void> {
   const connection = await mysql.createConnection({
     uri: databaseUrl(),
     multipleStatements: true,
+    charset: 'utf8mb4',
   })
   try {
     await connection.query(

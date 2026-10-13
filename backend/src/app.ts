@@ -2,9 +2,13 @@ import cors from 'cors'
 import express from 'express'
 import { errorHandler } from './middlewares/errorHandler.js'
 import { authRouter } from './routes/auth.js'
+import { cajaRouter } from './routes/caja.js'
+import { cocinaRouter } from './routes/cocina.js'
 import { menuRouter } from './routes/menu.js'
+import { mostradorRouter } from './routes/mostrador.js'
 import { pedidosRouter } from './routes/pedidos.js'
 import { platillosRouter } from './routes/platillos.js'
+import { transicionesRouter } from './routes/transiciones.js'
 import { usuariosRouter } from './routes/usuarios.js'
 
 export const app = express()
@@ -43,7 +47,11 @@ app.use('/api/auth', authRouter)
 app.use('/api/usuarios', usuariosRouter)
 app.use('/api/platillos', platillosRouter)
 app.use('/api/menu', menuRouter)
+app.use('/api/pedidos/mostrador', mostradorRouter)
 app.use('/api/pedidos', pedidosRouter)
+app.use('/api/pedidos', transicionesRouter)
+app.use('/api/cocina', cocinaRouter)
+app.use('/api/caja', cajaRouter)
 
 app.use((_req, res) => {
   res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Recurso no encontrado' } })

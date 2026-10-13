@@ -304,3 +304,48 @@ export async function obtenerPedido(
     conn.release()
   }
 }
+
+type Actor = { id: number; rol: string }
+
+/** Transiciones permitidas por rol además del flujo (matriz R3). */
+const PERMISOS_TRANSICION: Record<string, string[]> = {
+  cocinero: ['En preparación', 'Listo'],
+  cajero: ['Entregado', 'Cancelado'],
+  administrador: ['Pagado', 'En preparación', 'Listo', 'Entregado', 'Cancelado'],
+}
+
+/**
+ * Puerta única para cambios de estado: valida flujo por datos (cambiarEstado)
+ * y permiso del rol. Operativos solo ven sus pedidos vía las colas; el dueño
+ * no transiciona (sus pedidos avanzan por operación).
+ */
+export async function transicionarPedido(
+  pedidoId: number,
+  nuevoEstado: string,
+  actor: Actor,
+): Promise<PedidoVista> {
+  const permitidos = PERMISOS_TRANSICION[actor.rol]
+  if (!permitidos || !permitidos.includes(nuevoEstado)) {
+    throw new AppError(403, 'FORBIDDEN', 'No tienes acceso a esta función')
+  }
+  const conn = await pool.getConnection()
+  try {
+    await conn.beginTransaction()
+    const [rows] = await conn.query<RowDataPacket[]>(
+      'SELECT id FROM pedido WHERE id = ? FOR UPDATE',
+      [pedidoId],
+    )
+    if (rows.length === 0) {
+      throw new AppError(404, 'NOT_FOUND', 'Pedido no encontrado')
+    }
+    await cambiarEstado(conn, pedidoId, nuevoEstado, actor.id)
+    await conn.commit()
+    const vista = await obtenerPedido(pedidoId, { id: actor.id, rol: 'administrador' })
+    return vista
+  } catch (err) {
+    await conn.rollback()
+    throw err
+  } finally {
+    conn.release()
+  }
+}
