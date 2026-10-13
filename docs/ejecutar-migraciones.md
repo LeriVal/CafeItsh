@@ -25,9 +25,13 @@ Si configuraste un archivo de login (`mysql_config_editor set --login-path=local
 Desde la carpeta del proyecto, en PowerShell o CMD:
 
 ```bash
-mysql -h 127.0.0.1 -u cafe_admin -p cafe_itsh < migrations/001_crear_esquema.sql
-mysql -h 127.0.0.1 -u cafe_admin -p cafe_itsh < migrations/002_seed_inicial.sql
+mysql -h 127.0.0.1 --default-character-set=utf8mb4 -u cafe_admin -p cafe_itsh < migrations/001_crear_esquema.sql
+mysql -h 127.0.0.1 --default-character-set=utf8mb4 -u cafe_admin -p cafe_itsh < migrations/002_seed_inicial.sql
 ```
+
+> Sin `--default-character-set=utf8mb4`, los acentos (p. ej. `En preparación`)
+> se guardan corruptos y los cambios de estado fallan. El corredor
+> `npm run db:migrate` ya fuerza utf8mb4.
 
 **Importante:** ejecutar `001` antes que `002`. El `001` crea las tablas; el `002` inserta los datos base (roles, estados, transiciones, platillos y menú de ejemplo).
 
