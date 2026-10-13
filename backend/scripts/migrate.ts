@@ -31,12 +31,15 @@ function databaseUrl(): string {
   return url
 }
 
-function isAlreadyExists(err: unknown): boolean {
+function isYaAplicado(err: unknown): boolean {
+  // 1050 tabla ya existe, 1060 columna duplicada: objetos de una línea base
+  // manual o de una corrida parcial interrumpida; se registra como aplicada.
   return (
     typeof err === 'object' &&
     err !== null &&
     'errno' in err &&
-    (err as { errno: number }).errno === 1050
+    ((err as { errno: number }).errno === 1050 ||
+      (err as { errno: number }).errno === 1060)
   )
 }
 
@@ -71,7 +74,7 @@ async function main(): Promise<void> {
         await connection.query(sql)
         console.log(`+ ${file} aplicada`)
       } catch (err) {
-        if (isAlreadyExists(err)) {
+        if (isYaAplicado(err)) {
           console.warn(
             `~ ${file} ya existía en la BD (línea base manual); se registra como aplicada`,
           )

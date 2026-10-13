@@ -18,6 +18,12 @@
   --color-espresso: #6b3f23;
   --color-error: #b91c1c;
   --color-error-container: #fee2e2;
+  --color-status-pending: #9a3412;
+  --color-status-paid: #1e7a46;
+  --color-status-preparing: #b45309;
+  --color-status-ready: #0369a1;
+  --color-status-delivered: #166534;
+  --color-status-cancelled: #b91c1c;
 
   --font-display: "Plus Jakarta Sans", system-ui, "Segoe UI", sans-serif;
   --font-sans: Inter, system-ui, "Segoe UI", Roboto, sans-serif;

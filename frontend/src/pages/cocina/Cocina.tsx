@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ApiError } from '../../lib/api'
 import { SONDEO_MS, cambiarEstadoPedido, colaCocina } from '../../lib/operacion'
 import type { PedidoCola } from '../../lib/operacion'
+import StatusBadge from '../../components/StatusBadge'
 
 const SIGUIENTE: Record<string, { estado: string; etiqueta: string }> = {
   Pagado: { estado: 'En preparación', etiqueta: 'Iniciar preparación' },
@@ -88,7 +89,7 @@ export default function Cocina() {
                 </span>
               </div>
               <p className="mt-1 text-sm text-ink-soft">
-                {p.cliente} · {p.esperaMinutos} min en espera · {p.estado}
+                {p.cliente} · {p.esperaMinutos} min en espera · <StatusBadge estado={p.estado} />
               </p>
               <ul className="mt-3 flex flex-col gap-1 border-t border-outline-soft pt-3">
                 {p.lineas.map((l, i) => (

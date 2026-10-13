@@ -2,6 +2,7 @@ import type { PoolConnection, RowDataPacket } from 'mysql2/promise'
 import { pool } from '../db/pool.js'
 import { AppError } from '../middlewares/errorHandler.js'
 import { hoyMx } from './menu.js'
+import { crearAvisoListo } from './notificaciones.js'
 
 export interface DetalleVista {
   menuDiaId: number
@@ -280,8 +281,7 @@ async function leerPedido(
 }
 
 /** Dueño o administrador; 404 sin distinguir para no filtrar existencia. */
-export async function obtenerPedido(
-  pedidoId: number,
+export async function obtenerPedido(  pedidoId: number,
   solicitante: { id: number; rol: string },
 ): Promise<PedidoVista> {
   const conn = await pool.getConnection()
@@ -332,19 +332,42 @@ export async function transicionarPedido(
   try {
     await conn.beginTransaction()
     const [rows] = await conn.query<RowDataPacket[]>(
-      'SELECT id FROM pedido WHERE id = ? FOR UPDATE',
+      'SELECT id, usuario_id AS duenio FROM pedido WHERE id = ? FOR UPDATE',
       [pedidoId],
     )
     if (rows.length === 0) {
       throw new AppError(404, 'NOT_FOUND', 'Pedido no encontrado')
     }
+    const duenio = (rows[0] as { duenio: number | null }).duenio
     await cambiarEstado(conn, pedidoId, nuevoEstado, actor.id)
     await conn.commit()
+    if (nuevoEstado === 'Listo') {
+      await crearAvisoListo(pedidoId, duenio)
+    }
     const vista = await obtenerPedido(pedidoId, { id: actor.id, rol: 'administrador' })
     return vista
   } catch (err) {
     await conn.rollback()
     throw err
+  } finally {
+    conn.release()
+  }
+}
+
+/** Lista del dueño (recientes primero) con detalle completo. */
+export async function listarMisPedidos(duenioId: number): Promise<PedidoVista[]> {
+  const conn = await pool.getConnection()
+  try {
+    const [rows] = await conn.query<RowDataPacket[]>(
+      'SELECT id FROM pedido WHERE usuario_id = ? ORDER BY creado_en DESC, id DESC',
+      [duenioId],
+    )
+    const vistas: PedidoVista[] = []
+    for (const r of rows as Array<{ id: number }>) {
+      const vista = await leerPedido(conn, r.id)
+      if (vista) vistas.push(vista)
+    }
+    return vistas
   } finally {
     conn.release()
   }

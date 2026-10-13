@@ -2,6 +2,7 @@ import cors from 'cors'
 import express from 'express'
 import { errorHandler } from './middlewares/errorHandler.js'
 import { authRouter } from './routes/auth.js'
+import { avisosRouter } from './routes/avisos.js'
 import { cajaRouter } from './routes/caja.js'
 import { cocinaRouter } from './routes/cocina.js'
 import { menuRouter } from './routes/menu.js'
@@ -52,6 +53,7 @@ app.use('/api/pedidos', pedidosRouter)
 app.use('/api/pedidos', transicionesRouter)
 app.use('/api/cocina', cocinaRouter)
 app.use('/api/caja', cajaRouter)
+app.use('/api/avisos', avisosRouter)
 
 app.use((_req, res) => {
   res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Recurso no encontrado' } })

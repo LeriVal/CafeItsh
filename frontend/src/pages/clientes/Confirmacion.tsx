@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ApiError, api } from '../../lib/api'
+import StatusBadge from '../../components/StatusBadge'
 
 interface PedidoDetalle {
   id: number
@@ -53,7 +54,7 @@ export default function Confirmacion() {
         <p className="text-sm font-bold text-primary">¡Pedido confirmado!</p>
         <h1 className="font-display text-2xl font-bold">Folio {pedido.numero}</h1>
         <p className="mt-1 text-sm text-ink-soft">
-          Estado: <strong>{pedido.estado}</strong> · Recogida: {recogida}
+          Estado: <StatusBadge estado={pedido.estado} /> · Recogida: {recogida}
         </p>
         {pedido.pagoReferencia && (
           <p className="mt-1 text-xs text-ink-soft">Referencia de pago: {pedido.pagoReferencia}</p>

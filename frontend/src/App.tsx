@@ -12,7 +12,7 @@ import Checkout from './pages/clientes/Checkout'
 import Confirmacion from './pages/clientes/Confirmacion'
 import Cocina from './pages/cocina/Cocina'
 import Menu from './pages/clientes/Menu'
-import Placeholder from './pages/Placeholder'
+import MisPedidos from './pages/clientes/MisPedidos'
 
 function conRol(roles: ('administrador' | 'cajero' | 'cocinero' | 'usuario')[], pagina: React.ReactNode) {
   return (
@@ -36,7 +36,7 @@ export default function App() {
         <Route path="/menu" element={conRol(['usuario'], <Menu />)} />
         <Route path="/pedido/nuevo" element={conRol(['usuario'], <Checkout />)} />
         <Route path="/pedido/:id" element={conRol(['usuario'], <Confirmacion />)} />
-        <Route path="/mis-pedidos" element={conRol(['usuario'], <Placeholder titulo="Mis pedidos" />)} />
+        <Route path="/mis-pedidos" element={conRol(['usuario'], <MisPedidos />)} />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route
           path="*"
