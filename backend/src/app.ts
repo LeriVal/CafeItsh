@@ -3,6 +3,7 @@ import express from 'express'
 import { errorHandler } from './middlewares/errorHandler.js'
 import { authRouter } from './routes/auth.js'
 import { menuRouter } from './routes/menu.js'
+import { pedidosRouter } from './routes/pedidos.js'
 import { platillosRouter } from './routes/platillos.js'
 import { usuariosRouter } from './routes/usuarios.js'
 
@@ -42,6 +43,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/usuarios', usuariosRouter)
 app.use('/api/platillos', platillosRouter)
 app.use('/api/menu', menuRouter)
+app.use('/api/pedidos', pedidosRouter)
 
 app.use((_req, res) => {
   res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Recurso no encontrado' } })

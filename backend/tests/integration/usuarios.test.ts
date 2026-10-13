@@ -195,8 +195,17 @@ describe('PATCH /api/usuarios/:id', () => {
   })
 
   it('el último administrador activo no puede deshabilitarse a sí mismo', async () => {
-    // Deja un solo admin activo (el temporal) para probar la regla.
-    await pool.query("UPDATE usuario SET activo = FALSE WHERE rol_id = (SELECT id FROM rol WHERE nombre = 'administrador') AND correo <> ?", [adminCorreo])
+    // Deja un solo admin activo (el temporal) para probar la regla y restaura
+    // por ids al final (los archivos de test corren en paralelo sobre la BD).
+    const [previos] = await pool.query(
+      "SELECT u.id FROM usuario u JOIN rol r ON r.id = u.rol_id WHERE r.nombre = 'administrador' AND u.activo = TRUE AND u.correo <> ?",
+      [adminCorreo],
+    )
+    const ids = (previos as Array<{ id: number }>).map((r) => r.id)
+    await pool.query(
+      "UPDATE usuario SET activo = FALSE WHERE rol_id = (SELECT id FROM rol WHERE nombre = 'administrador') AND correo <> ?",
+      [adminCorreo],
+    )
     try {
       const lista = await api('/api/usuarios', adminToken)
       const usuarios = (lista.body as { usuarios: Array<{ id: number; correo: string }> }).usuarios
@@ -213,9 +222,9 @@ describe('PATCH /api/usuarios/:id', () => {
         },
       })
     } finally {
-      await pool.query(
-        "UPDATE usuario SET activo = TRUE WHERE rol_id = (SELECT id FROM rol WHERE nombre = 'administrador') AND correo LIKE 'admin@%'",
-      )
+      if (ids.length > 0) {
+        await pool.query('UPDATE usuario SET activo = TRUE WHERE id IN (?)', [ids])
+      }
     }
   })
 })
