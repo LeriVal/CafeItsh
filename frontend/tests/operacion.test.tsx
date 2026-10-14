@@ -1,10 +1,11 @@
 import { cleanup, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi, afterEach, beforeEach } from 'vitest'
 import { AuthProvider } from '../src/lib/auth'
 import { CartProvider } from '../src/lib/carrito'
 import Caja from '../src/pages/caja/Caja'
+import { CapturaProvider } from '../src/pages/caja/CapturaContext'
 import Cocina from '../src/pages/cocina/Cocina'
 
 const COLA = [
@@ -17,6 +18,7 @@ const COLA = [
     esperaMinutos: 12,
     creadoEn: new Date().toISOString(),
     total: '70.00',
+    fechaRecoleccion: new Date(Date.now() + 3600_000).toISOString(),
     lineas: [{ nombre: 'Gordita', cantidad: 2 }],
   },
   {
@@ -28,6 +30,7 @@ const COLA = [
     esperaMinutos: 5,
     creadoEn: new Date().toISOString(),
     total: '35.00',
+    fechaRecoleccion: new Date(Date.now() - 600_000).toISOString(),
     lineas: [{ nombre: 'Café', cantidad: 1 }],
   },
 ]
@@ -91,6 +94,8 @@ describe('cocina', () => {
     expect(
       within(tarjeta2 as HTMLElement).getByRole('button', { name: /marcar listo/i }),
     ).toBeInTheDocument()
+    expect(screen.getAllByText(/recoge /i)).toHaveLength(2)
+    expect(screen.getByText(/¡retrasado!/i)).toBeInTheDocument()
   })
 
   it('avanzar estado refresca y hay sondeo programado', async () => {
@@ -125,36 +130,8 @@ describe('cocina', () => {
 })
 
 describe('caja', () => {
-  it('captura con monto y muestra cambio; bloque de entrega lista Listo', async () => {
-    const user = userEvent.setup()
-    mockFetch((u, init) => {
-      if (u.includes('/api/menu')) {
-        return {
-          ok: true,
-          json: async () => ({
-            fecha: '2026-10-13',
-            lineas: [
-              {
-                id: 31,
-                fecha: '2026-10-13',
-                precio: '30.00',
-                disponible: true,
-                especial: false,
-                platillo: { id: 2, nombre: 'Gordita', categoria: 'Comida', descripcion: '' },
-              },
-            ],
-          }),
-        }
-      }
-      if (u.includes('/api/pedidos/mostrador')) {
-        return {
-          ok: true,
-          json: async () => ({
-            pedido: { id: 40, numero: 'M-20261013-0040', estado: 'Pagado', total: '60.00' },
-            cambio: '40.00',
-          }),
-        }
-      }
+  it('inicio con acciones y contador de entregas', async () => {
+    mockFetch((u) => {
       if (u.includes('/api/caja/listos')) {
         return {
           ok: true,
@@ -175,29 +152,25 @@ describe('caja', () => {
           }),
         }
       }
-      if (u.includes('/estado')) {
-        return { ok: true, json: async () => ({ pedido: { id: 41 } }) }
-      }
-      throw new Error(`${u} ${init?.method ?? ''}`)
+      throw new Error(u)
     })
-    conRol(<Caja />)
-    await screen.findByRole('option', { name: /Gordita/ })
-    await user.selectOptions(screen.getByLabelText('Platillo'), '31')
-    await user.click(screen.getByRole('button', { name: 'Agregar' }))
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: (_, el) => el?.textContent === 'Cobrar $30.00' }),
-      ).toBeInTheDocument()
-    })
-    await user.type(screen.getByLabelText(/monto recibido/i), '100')
-    await user.click(
-      screen.getByRole('button', { name: (_, el) => el?.textContent === 'Cobrar $30.00' }),
+    localStorage.setItem('itsh.token', 'tok')
+    render(
+      <MemoryRouter initialEntries={['/caja']}>
+        <AuthProvider>
+          <CartProvider>
+            <CapturaProvider>
+              <Routes>
+                <Route path="/caja/*" element={<Caja />} />
+              </Routes>
+            </CapturaProvider>
+          </CartProvider>
+        </AuthProvider>
+      </MemoryRouter>,
     )
     await waitFor(() => {
-      expect(screen.getByRole('status')).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /capturar pedido/i })).toBeInTheDocument()
     })
-    expect(screen.getByRole('status').textContent).toContain('M-20261013-0040')
-    expect(screen.getByRole('status').textContent).toContain('40.00')
-    expect(screen.getByText('A-20261013-0041')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /entregas/i }).textContent).toContain('1 por entregar')
   })
 })

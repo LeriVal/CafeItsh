@@ -135,11 +135,13 @@ describe('GET /api/cocina/cola', () => {
       tipo: string
       cliente: string
       esperaMinutos: number
+      fechaRecoleccion: string | null
       lineas: Array<{ nombre: string; cantidad: number }>
     }
     expect(primero.numero).toMatch(/^[AM]-/)
     expect(primero.lineas.length).toBeGreaterThan(0)
     expect(typeof primero.esperaMinutos).toBe('number')
+    expect(primero.fechaRecoleccion).toMatch(/^\d{4}-\d{2}-\d{2}T/)
   })
 
   it('cliente y cajero 403', async () => {

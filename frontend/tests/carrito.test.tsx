@@ -149,9 +149,7 @@ describe('confirmación', () => {
       </MemoryRouter>,
     )
     await waitFor(() => {
-      expect(
-        screen.getByText((_, el) => el?.textContent === 'Folio A-20261013-0007'),
-      ).toBeInTheDocument()
+      expect(screen.getByText('A-20261013-0007')).toBeInTheDocument()
     })
     expect(screen.getByText('Pagado')).toBeInTheDocument()
     expect(

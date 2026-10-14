@@ -52,7 +52,7 @@ export default function Confirmacion() {
     <div className="flex flex-col gap-6">
       <section className="card">
         <p className="text-sm font-bold text-primary">¡Pedido confirmado!</p>
-        <h1 className="font-display text-2xl font-bold">Folio {pedido.numero}</h1>
+        <h1 className="font-mono font-display text-3xl font-bold">{pedido.numero}</h1>
         <p className="mt-1 text-sm text-ink-soft">
           Estado: <StatusBadge estado={pedido.estado} /> · Recogida: {recogida}
         </p>
@@ -79,9 +79,14 @@ export default function Confirmacion() {
         </p>
       </section>
 
-      <Link className="btn-secondary inline-flex items-center justify-center" to="/menu">
-        Volver al menú
-      </Link>
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <Link className="btn-primary inline-flex min-h-[48px] flex-1 items-center justify-center" to="/mis-pedidos">
+          Ver mis pedidos
+        </Link>
+        <Link className="btn-secondary inline-flex min-h-[48px] flex-1 items-center justify-center" to="/menu">
+          Volver al menú
+        </Link>
+      </div>
     </div>
   )
 }

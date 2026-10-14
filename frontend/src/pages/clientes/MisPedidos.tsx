@@ -41,9 +41,18 @@ export default function MisPedidos() {
     }
   }
 
+  const activos = pedidos.filter((p) => p.estado !== 'Entregado' && p.estado !== 'Cancelado').length
+
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="font-display text-xl font-bold">Mis pedidos</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="font-display text-xl font-bold">
+          Mis pedidos {pedidos.length > 0 && <span>({activos} activo{activos === 1 ? '' : 's'})</span>}
+        </h1>
+        <Link className="btn-secondary min-h-[44px] text-sm" to="/menu">
+          Nuevo pedido
+        </Link>
+      </div>
 
       {error && (
         <p role="alert" className="input-error">

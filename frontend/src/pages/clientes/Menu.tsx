@@ -14,6 +14,8 @@ export default function Menu() {
   const [menu, setMenu] = useState<MenuDia | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [cargando, setCargando] = useState(true)
+  const [texto, setTexto] = useState('')
+  const [categoria, setCategoria] = useState('')
   const { items, total, conteo, agregar, fijarCantidad } = useCart()
 
   useEffect(() => {
@@ -44,11 +46,58 @@ export default function Menu() {
     )
   }
 
+  const categorias = [...new Set(menu.lineas.map((l) => l.platillo.categoria).filter((c): c is string => !!c))]
+  const visibles = menu.lineas.filter(
+    (l) =>
+      (categoria === '' || l.platillo.categoria === categoria) &&
+      l.platillo.nombre.toLowerCase().includes(texto.toLowerCase()),
+  )
+
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="font-display text-xl font-bold">Menú del día</h1>
+      <div>
+        <h1 className="font-display text-xl font-bold">Menú del día</h1>
+        <p className="text-sm text-ink-soft">¡Buen día! Tu café, en buenas manos.</p>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <input
+          className="input-field"
+          placeholder="Buscar producto..."
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
+          aria-label="Buscar producto"
+        />
+        {categorias.length > 0 && (
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Categorías">
+            <button
+              className={`min-h-[44px] rounded-full px-4 text-sm font-bold ${categoria === '' ? 'bg-primary text-on-primary' : 'border border-outline-soft'}`}
+              type="button"
+              onClick={() => setCategoria('')}
+            >
+              Todas
+            </button>
+            {categorias.map((c) => (
+              <button
+                key={c}
+                className={`min-h-[44px] rounded-full px-4 text-sm font-bold ${categoria === c ? 'bg-primary text-on-primary' : 'border border-outline-soft'}`}
+                type="button"
+                onClick={() => setCategoria(categoria === c ? '' : c)}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {visibles.length === 0 ? (
+        <section className="card">
+          <p className="text-ink-soft">Sin resultados para ‘{texto}’.</p>
+        </section>
+      ) : (
       <div className="grid gap-4 md:grid-cols-2">
-        {menu.lineas.map((l) => (
+        {visibles.map((l) => (
           <article
             key={l.id}
             className={`card flex flex-col gap-2 ${l.disponible ? '' : 'opacity-70'}`}
@@ -120,6 +169,7 @@ export default function Menu() {
           </article>
         ))}
       </div>
+      )}
       {conteo > 0 && (
         <Link
           to="/pedido/nuevo"

@@ -26,7 +26,8 @@ sprint es un subconjunto trazable de ella (historias, FRs y criterios).
 | 2 | 3–4 (2026-10-27 → 11-09) | `specs/003-menu-management/` | US5 + consulta de US1 | FR-004…FR-008 | Admin publica el menú; alumno lo consulta en el móvil ✅ (2026-10-13) |
 | 3 | 5–6 (2026-11-10 → 11-23) | `specs/004-advance-orders-payment/` | US1 | FR-009…FR-014 (estados Pendiente/Pagado) | Flujo alumno: menú → pedido → pago anticipado ✅ (2026-10-13) |
 | 4 | 7–8 (2026-11-24 → 12-07) | `specs/005-counter-kitchen/` | US4 + US3 | FR-015, FR-016, FR-018…FR-022 | Cajero captura mostrador; cocina procesa en pantalla ✅ (2026-10-13) |
-| 5 | 9–10 (2026-12-08 → 12-21) | `specs/006-order-tracking-notifications/` | US2 + pulido | FR-017, FR-023…FR-029 | Notificación de pedido listo + demo completa |
+| 5 | 9–10 (2026-12-08 → 12-21) | `specs/006-order-tracking-notifications/` | US2 + pulido | FR-017, FR-023…FR-029 | Notificación de pedido listo + demo completa ✅ (2026-10-13) |
+| 6 | 11–12 | `specs/007-ui-redesign/` | Rediseño UI por rol | — | Drawer + bottom bar, caja/cliente/cocina/admin según `desing/` |
 
 > Las fechas son estimadas; se ajustan al calendario real del plantel.
 

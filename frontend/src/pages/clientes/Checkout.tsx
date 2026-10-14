@@ -123,6 +123,9 @@ export default function Checkout() {
               onChange={(e) => setRecogida(e.target.value)}
               required
             />
+            <p className="mt-1 text-xs text-ink-soft">
+              Hora mínima: {aDatetimeLocal(new Date(Date.now() + 10 * 60_000)).replace('T', ' ')}
+            </p>
           </div>
           <button className="btn-primary" type="submit" disabled={pagando}>
             {pagando ? 'Procesando…' : pedidoPendiente !== null ? 'Reintentar pago' : 'Confirmar y pagar'}

@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import AppShell from './components/AppShell'
+import { BottomBarCliente } from './components/BottomBar'
 import ProtectedRoute from './components/ProtectedRoute'
-import RoleLayout from './components/RoleLayout'
 import { AuthProvider } from './lib/auth'
 import { CartProvider } from './lib/carrito'
 import AccessDenied from './pages/auth/AccessDenied'
@@ -14,10 +15,14 @@ import Cocina from './pages/cocina/Cocina'
 import Menu from './pages/clientes/Menu'
 import MisPedidos from './pages/clientes/MisPedidos'
 
-function conRol(roles: ('administrador' | 'cajero' | 'cocinero' | 'usuario')[], pagina: React.ReactNode) {
+function conRol(
+  roles: ('administrador' | 'cajero' | 'cocinero' | 'usuario')[],
+  pagina: React.ReactNode,
+  barra?: React.ReactNode,
+) {
   return (
     <ProtectedRoute allowed={roles}>
-      <RoleLayout>{pagina}</RoleLayout>
+      <AppShell barra={barra}>{pagina}</AppShell>
     </ProtectedRoute>
   )
 }
@@ -33,10 +38,10 @@ export default function App() {
         <Route path="/admin/*" element={conRol(['administrador'], <Admin />)} />
         <Route path="/caja" element={conRol(['cajero', 'administrador'], <Caja />)} />
         <Route path="/cocina" element={conRol(['cocinero', 'administrador'], <Cocina />)} />
-        <Route path="/menu" element={conRol(['usuario'], <Menu />)} />
-        <Route path="/pedido/nuevo" element={conRol(['usuario'], <Checkout />)} />
-        <Route path="/pedido/:id" element={conRol(['usuario'], <Confirmacion />)} />
-        <Route path="/mis-pedidos" element={conRol(['usuario'], <MisPedidos />)} />
+        <Route path="/menu" element={conRol(['usuario'], <Menu />, <BottomBarCliente />)} />
+        <Route path="/pedido/nuevo" element={conRol(['usuario'], <Checkout />, <BottomBarCliente />)} />
+        <Route path="/pedido/:id" element={conRol(['usuario'], <Confirmacion />, <BottomBarCliente />)} />
+        <Route path="/mis-pedidos" element={conRol(['usuario'], <MisPedidos />, <BottomBarCliente />)} />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route
           path="*"

@@ -14,6 +14,7 @@ export interface PedidoCola {
   esperaMinutos: number
   creadoEn: string
   total: string
+  fechaRecoleccion: string | null
   lineas: LineaCola[]
 }
 

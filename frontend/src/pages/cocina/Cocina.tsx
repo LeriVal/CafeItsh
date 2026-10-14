@@ -42,8 +42,21 @@ export default function Cocina() {
       await cambiarEstadoPedido(p.id, siguiente.estado)
       await cargar()
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'No se pudo conectar')
+      if (err instanceof ApiError && (err.code === 'INVALID_TRANSITION' || err.status === 404)) {
+        setError('Otro operador ya movió ese pedido; lista actualizada')
+        await cargar()
+      } else {
+        setError(err instanceof ApiError ? err.message : 'No se pudo conectar')
+      }
     }
+  }
+
+  function formatoHora(iso: string): string {
+    return new Date(iso).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })
+  }
+
+  function retrasado(p: PedidoCola): boolean {
+    return !!p.fechaRecoleccion && new Date(p.fechaRecoleccion).getTime() < Date.now()
   }
 
   return (
@@ -91,9 +104,15 @@ export default function Cocina() {
               <p className="mt-1 text-sm text-ink-soft">
                 {p.cliente} · {p.esperaMinutos} min en espera · <StatusBadge estado={p.estado} />
               </p>
+              {p.fechaRecoleccion ? (
+                <p className={`mt-1 text-sm font-bold ${retrasado(p) ? 'text-error' : ''}`}>
+                  Recoge {formatoHora(p.fechaRecoleccion)}
+                  {retrasado(p) && ' · ¡Retrasado!'}
+                </p>
+              ) : null}
               <ul className="mt-3 flex flex-col gap-1 border-t border-outline-soft pt-3">
                 {p.lineas.map((l, i) => (
-                  <li key={i} className="flex justify-between text-lg">
+                  <li key={i} className="flex justify-between text-xl">
                     <span className="font-bold">{l.cantidad} × {l.nombre}</span>
                   </li>
                 ))}
