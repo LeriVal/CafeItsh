@@ -280,8 +280,9 @@ async function leerPedido(
   }
 }
 
-/** Dueño o administrador; 404 sin distinguir para no filtrar existencia. */
-export async function obtenerPedido(  pedidoId: number,
+/** Dueño, cajero o administrador; 404 sin distinguir para no filtrar existencia. */
+export async function obtenerPedido(
+  pedidoId: number,
   solicitante: { id: number; rol: string },
 ): Promise<PedidoVista> {
   const conn = await pool.getConnection()
@@ -294,10 +295,43 @@ export async function obtenerPedido(  pedidoId: number,
     if (!fila) {
       throw new AppError(404, 'NOT_FOUND', 'Pedido no encontrado')
     }
-    if (solicitante.rol !== 'administrador' && fila.duenio !== solicitante.id) {
+    if (
+      solicitante.rol !== 'administrador' &&
+      solicitante.rol !== 'cajero' &&
+      fila.duenio !== solicitante.id
+    ) {
       throw new AppError(404, 'NOT_FOUND', 'Pedido no encontrado')
     }
     const vista = await leerPedido(conn, pedidoId)
+    if (!vista) throw new AppError(404, 'NOT_FOUND', 'Pedido no encontrado')
+    return vista
+  } finally {
+    conn.release()
+  }
+}
+
+/** Lectura operativa por folio para caja (verificación en mostrador). */
+export async function leerPorFolio(
+  folio: string,
+  solicitante: { id: number; rol: string },
+): Promise<PedidoVista> {
+  if (solicitante.rol !== 'administrador' && solicitante.rol !== 'cajero') {
+    throw new AppError(404, 'NOT_FOUND', 'Pedido no encontrado')
+  }
+  const numero = folio.trim().toUpperCase()
+  if (numero.length === 0 || numero.length > 20) {
+    throw new AppError(404, 'NOT_FOUND', 'Pedido no encontrado')
+  }
+  const conn = await pool.getConnection()
+  try {
+    const [rows] = await conn.query<RowDataPacket[]>('SELECT id FROM pedido WHERE numero = ?', [
+      numero,
+    ])
+    const fila = rows[0] as { id: number } | undefined
+    if (!fila) {
+      throw new AppError(404, 'NOT_FOUND', 'Pedido no encontrado')
+    }
+    const vista = await leerPedido(conn, fila.id)
     if (!vista) throw new AppError(404, 'NOT_FOUND', 'Pedido no encontrado')
     return vista
   } finally {

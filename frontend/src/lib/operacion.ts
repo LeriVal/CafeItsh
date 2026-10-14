@@ -35,6 +35,21 @@ export function cambiarEstadoPedido(id: number, estado: string): Promise<{ pedid
   })
 }
 
+export interface PedidoDetalle {
+  id: number
+  numero: string
+  tipo: string
+  estado: string
+  total: string
+  fechaRecoleccion: string | null
+  detalle: Array<{ menuDiaId: number; nombre: string; cantidad: number; precioUnitario: string; subtotal: string }>
+  pagoReferencia: string | null
+}
+
+export function buscarPorFolio(folio: string): Promise<{ pedido: PedidoDetalle }> {
+  return api(`/api/pedidos/folio/${encodeURIComponent(folio.trim())}`)
+}
+
 export function crearMostrador(input: {
   items: Array<{ menuDiaId: number; cantidad: number }>
   clienteNombre?: string

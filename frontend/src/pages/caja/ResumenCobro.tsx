@@ -6,7 +6,7 @@ import { crearMostrador } from '../../lib/operacion'
 import { useCaptura } from './CapturaContext'
 
 export default function ResumenCobro() {
-  const { items, total, cliente, fijarCliente, limpiar } = useCaptura()
+  const { items, total, cliente, fijarCliente, quitar, limpiar } = useCaptura()
   const navigate = useNavigate()
   const [monto, setMonto] = useState('')
   const [ticket, setTicket] = useState<{ numero: string; cambio: string } | null>(null)
@@ -71,11 +71,21 @@ export default function ResumenCobro() {
       <section className="card">
         <ul className="flex flex-col gap-2">
           {items.map((i) => (
-            <li key={i.menuDiaId} className="flex justify-between text-sm">
+            <li key={i.menuDiaId} className="flex items-center justify-between text-sm">
               <span>
                 {i.cantidad} × {i.nombre}
               </span>
-              <strong>${(i.precio * i.cantidad).toFixed(2)}</strong>
+              <span className="flex items-center gap-3">
+                <strong>${(i.precio * i.cantidad).toFixed(2)}</strong>
+                <button
+                  className="text-sm font-bold text-error"
+                  type="button"
+                  onClick={() => quitar(i.menuDiaId)}
+                  aria-label={`Quitar ${i.nombre}`}
+                >
+                  ×
+                </button>
+              </span>
             </li>
           ))}
         </ul>

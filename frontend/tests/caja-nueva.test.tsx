@@ -183,3 +183,133 @@ describe('caja rediseñada', () => {
     })
   })
 })
+
+describe('caja: folio, detalle y resumen', () => {
+  function mockCaja() {
+    mockFetch((u, init) => {
+      if (u.includes('/api/menu')) {
+        return {
+          ok: true,
+          json: async () => ({
+            fecha: '2026-10-14',
+            lineas: [
+              {
+                id: 31,
+                fecha: '2026-10-14',
+                precio: '30.00',
+                disponible: true,
+                especial: false,
+                platillo: { id: 1, nombre: 'Gordita', categoria: 'Comida', descripcion: '' },
+              },
+            ],
+          }),
+        }
+      }
+      if (u.includes('/api/pedidos/folio/')) {
+        return {
+          ok: true,
+          json: async () => ({
+            pedido: {
+              id: 50,
+              numero: 'A-20261014-0050',
+              tipo: 'anticipado',
+              estado: 'Pagado',
+              total: '30.00',
+              fechaRecoleccion: null,
+              detalle: [
+                { menuDiaId: 31, nombre: 'Gordita', cantidad: 1, precioUnitario: '30.00', subtotal: '30.00' },
+              ],
+              pagoReferencia: 'SIM-Z',
+            },
+          }),
+        }
+      }
+      if (u.includes('/api/pedidos/mostrador')) {
+        return {
+          ok: true,
+          json: async () => ({
+            pedido: { id: 40, numero: 'M-1', estado: 'Pagado', total: '30.00' },
+            cambio: '0.00',
+          }),
+        }
+      }
+      if (u.includes('/api/caja/listos')) {
+        return {
+          ok: true,
+          json: async () => ({
+            pedidos: [
+              {
+                id: 41,
+                numero: 'A-20261014-0041',
+                tipo: 'anticipado',
+                estado: 'Listo',
+                cliente: 'Luis',
+                esperaMinutos: 3,
+                creadoEn: new Date().toISOString(),
+                total: '30.00',
+                lineas: [{ nombre: 'Gordita', cantidad: 2 }],
+              },
+            ],
+          }),
+        }
+      }
+      if (u.includes('/estado')) return { ok: true, json: async () => ({ pedido: { id: 41 } }) }
+      throw new Error(`${u} ${init?.method ?? ''}`)
+    })
+  }
+
+  function renderCaja(ruta: string) {
+    localStorage.setItem('itsh.token', 'tok')
+    render(
+      <MemoryRouter initialEntries={[ruta]}>
+        <AuthProvider>
+          <CartProvider>
+            <Routes>
+              <Route path="/caja/*" element={<Caja />} />
+            </Routes>
+          </CartProvider>
+        </AuthProvider>
+      </MemoryRouter>,
+    )
+  }
+
+  it('buscar por folio muestra detalle y estado', async () => {
+    const user = userEvent.setup()
+    mockCaja()
+    renderCaja('/caja/entregas')
+    await screen.findByText('A-20261014-0041')
+    await user.type(screen.getByLabelText('Folio del pedido'), 'a-20261014-0050')
+    await user.click(screen.getByRole('button', { name: 'Buscar' }))
+    await waitFor(() => {
+      expect(screen.getByText('A-20261014-0050')).toBeInTheDocument()
+    })
+    expect(screen.getByText('Pagado')).toBeInTheDocument()
+  })
+
+  it('entregas muestran partidas y avisan al entregar', async () => {
+    const user = userEvent.setup()
+    mockCaja()
+    renderCaja('/caja/entregas')
+    await waitFor(() => {
+      expect(screen.getByText(/2× Gordita/)).toBeInTheDocument()
+    })
+    await user.click(screen.getByRole('button', { name: 'Entregar' }))
+    await waitFor(() => {
+      expect(screen.getByText('Pedido entregado.')).toBeInTheDocument()
+    })
+  })
+
+  it('resumen permite quitar líneas', async () => {
+    const user = userEvent.setup()
+    mockCaja()
+    renderCaja('/caja/nuevo')
+    await screen.findByText('Gordita')
+    await user.click(screen.getByRole('button', { name: 'Agregar Gordita' }))
+    await user.click(screen.getByRole('link', { name: /ver cobro/i }))
+    await waitFor(() => {
+      expect(screen.getByText('Resumen de cobro')).toBeInTheDocument()
+    })
+    await user.click(screen.getByRole('button', { name: 'Quitar Gordita' }))
+    expect(screen.queryByText('Resumen de cobro')).not.toBeInTheDocument()
+  })
+})

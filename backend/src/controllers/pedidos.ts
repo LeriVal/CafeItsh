@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 import { AppError } from '../middlewares/errorHandler.js'
-import { crearAnticipado, listarMisPedidos, obtenerPedido } from '../services/pedidos.js'
+import { crearAnticipado, leerPorFolio, listarMisPedidos, obtenerPedido } from '../services/pedidos.js'
 import { ProveedorRechazo, pagarPedido } from '../services/pagos.js'
 
 const CAMPOS_TARJETA = ['tarjeta', 'numeroTarjeta', 'numero_tarjeta', 'cvv', 'cvc', 'pan', 'vencimiento']
@@ -48,6 +48,22 @@ export async function getMios(req: Request, res: Response): Promise<void> {
   }
   const pedidos = await listarMisPedidos(usuario.id)
   res.json({ pedidos })
+}
+
+export async function getPorFolio(req: Request, res: Response): Promise<void> {
+  const usuario = req.usuario
+  if (!usuario) {
+    throw new AppError(401, 'UNAUTHORIZED', 'Inicia sesión para continuar')
+  }
+  const { numero } = req.params
+  if (typeof numero !== 'string') {
+    throw new AppError(404, 'NOT_FOUND', 'Pedido no encontrado')
+  }
+  const pedido = await leerPorFolio(numero, {
+    id: usuario.id,
+    rol: usuario.rol,
+  })
+  res.json({ pedido })
 }
 
 export async function postPagar(req: Request, res: Response): Promise<void> {
