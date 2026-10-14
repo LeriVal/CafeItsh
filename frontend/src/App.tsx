@@ -36,7 +36,7 @@ export default function App() {
         <Route path="/registro" element={<Register />} />
         <Route path="/sin-acceso" element={<AccessDenied />} />
         <Route path="/admin/*" element={conRol(['administrador'], <Admin />)} />
-        <Route path="/caja" element={conRol(['cajero', 'administrador'], <Caja />)} />
+        <Route path="/caja/*" element={conRol(['cajero', 'administrador'], <Caja />)} />
         <Route path="/cocina" element={conRol(['cocinero', 'administrador'], <Cocina />)} />
         <Route path="/menu" element={conRol(['usuario'], <Menu />, <BottomBarCliente />)} />
         <Route path="/pedido/nuevo" element={conRol(['usuario'], <Checkout />, <BottomBarCliente />)} />
