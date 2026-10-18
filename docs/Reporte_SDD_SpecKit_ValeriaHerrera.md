@@ -209,6 +209,17 @@ Relaciones: un rol tiene varios usuarios; un usuario realiza o captura varios pe
 - Cada `tasks.md` cierra con una sección de dependencias y orden de ejecución (en el Sprint 1: la fase fundamental bloquea todo, US1 va primero y el resto depende de ella). Dentro de las tareas hay dependencias explícitas (p. ej. «depende de T004»).
 - **Limitación:** la trazabilidad de las tareas es por historia y no por requisito; el cruce requisito → commit → prueba está en `docs/evidencias/trazabilidad.md`.
 - **Análisis de consistencia:** no se ejecutó `/speckit.analyze`. La consistencia entre spec, plan y tareas se revisó con la verificación contra la constitution de cada plan y los checklists de calidad.
+- **Gestión en Jira:** el tablero del equipo (espacio CafeITSH1) organiza el trabajo en 6 sprints y en historias asignadas a cada integrante (capturas abajo). El avance de las tareas se lleva en `tasks.md`; Jira muestra la planeación por sprint.
+
+![Jira: línea de tiempo de los sprints](evidencias/jira-timeline-sprints.png)
+
+![Jira: backlog, sprints 1 a 3](evidencias/jira-backlog-sprints-1-3.png)
+
+![Jira: backlog, sprints 3 a 6](evidencias/jira-backlog-sprints-3-6.png)
+
+![Jira: checkpoints pendientes](evidencias/jira-backlog-checkpoints.png)
+
+**Nota honesta:** el estado en Jira va atrasado respecto al código. En la línea de tiempo, «Fundamentos y autenticación» y «Gestión y consulta de menú» están en *Listo* y «Pedido anticipado y pago» en *En curso*, pero «Mostrador (cajero) y cocina», «Seguimiento, notificaciones y pulido» y «Rediseño de interfaz por rol» están en *Por hacer*, aunque ya están implementados en el repo (commits ca031ca, 7a1c477, f9dc931 y d2cc55f). Las historias de mi porción son CFITSH-34 (Fundamentos y autenticación, asignada a mí y en *Listo*) y CFITSH-26 (Rediseño caja, en el Sprint 6).
 
 ### Evidencia
 `specs/00X-*/tasks.md` con casillas `[x]`. Commit e8069e8.
@@ -242,9 +253,9 @@ Capturas de la aplicación en ejecución, guardadas en `docs/evidencias/`.
 |---|---|---|
 | EARS-001, EARS-002 y EARS-005 del spec 002 | `captura-login.png` | Pantalla «Cafetería ITSH» con correo, contraseña, botón *Entrar* y enlace «¿Eres alumno o docente? Crea tu cuenta» |
 | EARS-003 y EARS-004 del spec 002 | `captura-registro.png` | Formulario «Crear cuenta» con nombre, correo y «Contraseña (mínimo 8 caracteres)» |
-| Spec 007, caja | `captura-caja-inicio.png` | Inicio de Caja con *Capturar pedido* y *Entregas (2 por entregar)*, con el drawer (Caja, Entregas, Cerrar sesión) |
-| EARS-001 del spec 005 | `captura-caja-nuevo-pedido.png` | Pantalla «Nuevo pedido» con buscador; el menú de hoy estaba vacío al tomarla |
-| EARS-007 del spec 005 | `captura-caja-entregas.png` | «Entregas (2)» con búsqueda por folio, los pedidos `A-20261013-0001` y `A-20261014-0001` y los botones *Entregar* y *Cancelar* |
+| Spec 007, caja | `captura-caja-inicio.png` | Inicio de Caja (domingo 18 de octubre) con *Capturar pedido* y *Entregas (3 por entregar)*, con el drawer (Caja, Entregas, Cerrar sesión) |
+| EARS-001 y EARS-003 del spec 005 | `captura-caja-nuevo-pedido.png` | «Nuevo pedido» con buscador, chips (Todas, Bebida, Comida) y catálogo con precios; Café de olla y Gordita de chicharrón con la etiqueta *Especial*, y un campo de cantidad con *Agregar* por platillo |
+| EARS-007 del spec 005 | `captura-caja-entregas.png` | «Entregas (3)» con búsqueda por folio, los pedidos `A-20261013-0001`, `A-20261014-0001` y `M-20261014-0001` (el de mostrador), cada uno con sus partidas y los botones *Entregar* y *Cancelar* |
 | Contexto del spec 005 | `captura-cocina-pedido-mostrador.png` | El pedido `M-20261014-0001` (origen *Mostrador*, 3 partidas) llegó a cocina |
 
 ![Inicio de sesión](evidencias/captura-login.png)
@@ -260,7 +271,7 @@ Capturas de la aplicación en ejecución, guardadas en `docs/evidencias/`.
 ![Cocina con el pedido de mostrador](evidencias/captura-cocina-pedido-mostrador.png)
 
 Notas honestas:
-- Falta la captura del catálogo con platillos, del resumen y del ticket con folio y cambio (el menú de hoy estaba vacío). Esos criterios (EARS-001 y EARS-002 del spec 005) se verifican con las pruebas automáticas.
+- Falta la captura del resumen de cobro y del ticket con folio y cambio. Esos criterios (EARS-001 y EARS-002 del spec 005) se verifican con las pruebas automáticas y el folio `M-20261014-0001` visible en Entregas y en Cocina.
 - Las capturas de login y registro muestran las pantallas vacías; el rechazo de credenciales inválidas se verifica con pruebas automáticas.
 
 ### 6.3 Verificación contra los criterios
