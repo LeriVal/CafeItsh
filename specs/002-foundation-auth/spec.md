@@ -155,6 +155,33 @@ verificando su inicio de sesión, editándolo y deshabilitándolo.
 - **Sesión**: prueba de identidad vigente tras iniciar sesión; se exige para
   todo módulo protegido y determina la autorización por rol.
 
+## Criterios de aceptación en EARS
+
+Reformulación verificable de FR-001, FR-002, FR-003, FR-004 y FR-007 con la
+sintaxis EARS. Complementa (no reemplaza) los escenarios Given/When/Then y
+los requisitos anteriores. Casi todos tienen una prueba automática; excepción: la vigencia de 8 h (EARS-001) se define en el servicio de auth.
+
+- **EARS-001** (FR-001, evento): **CUANDO** un usuario envíe correo y
+  contraseña válidos, el backend **DEBE** responder 200 con un token JWT de
+  8 horas de vigencia.
+- **EARS-002** (FR-007, no deseado): **SI** el correo no existe o la
+  contraseña es incorrecta, **ENTONCES** el backend **DEBE** responder 401 con
+  el mismo mensaje genérico en ambos casos, sin revelar si la cuenta existe.
+- **EARS-003** (FR-002, evento): **CUANDO** una persona se registre desde
+  "Crear cuenta", el backend **DEBE** crear la cuenta con el rol `usuario`
+  aunque la petición indique otro rol.
+- **EARS-004** (FR-007, no deseado): **SI** la contraseña tiene menos de 8
+  caracteres o el correo ya está registrado, **ENTONCES** el backend **DEBE**
+  rechazar el registro (400 o 409) sin crear la cuenta.
+- **EARS-005** (FR-003, no deseado): **SI** un visitante sin sesión abre un
+  módulo protegido, **ENTONCES** el frontend **DEBE** redirigirlo a `/login`.
+- **EARS-006** (FR-004, no deseado): **SI** un usuario con sesión abre un
+  módulo de otro rol, **ENTONCES** el frontend **DEBE** mostrar la pantalla
+  de acceso denegado y la API **DEBE** responder 403.
+- **EARS-007** (FR-002, no deseado): **SI** una cuenta se deshabilita o cambia
+  de rol después de firmar su token, **ENTONCES** el backend **DEBE** responder
+  401 en la siguiente petición.
+
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes

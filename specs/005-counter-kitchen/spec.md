@@ -146,6 +146,34 @@ intentando entregar, mover un `Entregado`, saltar estados).
   de roles (cocinero: preparar/listo; cajero: entregar/cancelar; admin: todo
   lo válido).
 
+## Criterios de aceptación en EARS
+
+Reformulación verificable de FR-001, FR-002 y FR-004 a FR-006 con la sintaxis
+EARS. Complementa (no reemplaza) los escenarios Given/When/Then y los
+requisitos anteriores. Casi todos tienen una prueba automática; excepción: EARS-005 se cumple por el sondeo de 10 s (`SONDEO_MS` en `frontend/src/lib/operacion.ts`), sin prueba automática.
+
+- **EARS-001** (FR-002, evento): **CUANDO** el cajero confirme un pedido de
+  mostrador con un monto en efectivo mayor o igual al total, el backend
+  **DEBE** crearlo en estado `Pagado` con folio `M-AAAAMMDD-NNNN`, calcular el
+  total en el servidor y devolver el cambio.
+- **EARS-002** (FR-002, no deseado): **SI** el monto recibido es menor que el
+  total, **ENTONCES** el backend **DEBE** responder 400 sin crear el pedido.
+- **EARS-003** (FR-001, no deseado): **SI** la captura incluye un platillo no
+  disponible, **ENTONCES** el backend **DEBE** responder 400 sin crear el
+  pedido.
+- **EARS-004** (FR-004, estado): **MIENTRAS** existan pedidos `Pagado` o
+  `En preparación`, la cola de cocina **DEBE** mostrarlos ordenados por hora
+  de llegada, con ambos orígenes y sin los `Pendiente`.
+- **EARS-005** (FR-004, evento): **CUANDO** llegue o cambie un pedido, la
+  pantalla de cocina **DEBE** reflejarlo en un máximo de 10 segundos sin
+  recarga manual.
+- **EARS-006** (FR-005, no deseado): **SI** un rol intenta una transición que
+  no le corresponde o un salto de estado, **ENTONCES** el backend **DEBE**
+  responder 403 (rol) o 409 (salto) y conservar el estado.
+- **EARS-007** (FR-006, estado): **MIENTRAS** un pedido esté `Listo`, la
+  pantalla de entregas de caja **DEBE** mostrarlo con las acciones Entregar y
+  Cancelar.
+
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
