@@ -50,3 +50,80 @@ no por los SQL actuales — el corredor verifica antes de ejecutar).
 Admin, cajero y cocinero se crean con el script de seed por variables de
 entorno; en desarrollo usan valores por defecto documentados en
 `quickstart.md`. Los clientes se autorregistran desde el sprint 1.
+
+## Diagrama ER del esquema completo (migraciones 001, 003 y 004)
+
+Vista de conjunto de las 12 tablas del sistema. Solo documenta lo que ya
+existe en `migrations/`; no agrega ni cambia nada del esquema.
+
+```mermaid
+erDiagram
+    rol ||--o{ usuario : "tiene"
+    usuario ||--o{ pedido : "realiza (usuario_id)"
+    usuario ||--o{ pedido : "captura (creado_por)"
+    platillo ||--o{ menu_dia : "se publica en"
+    menu_dia ||--o{ pedido_detalle : "se pide en"
+    estado_pedido ||--o{ pedido : "estado actual"
+    estado_pedido ||--o{ transicion_estado : "desde / hacia"
+    pedido ||--|{ pedido_detalle : "contiene"
+    pedido ||--o{ pedido_estado_historial : "registra cambios"
+    pedido ||--o| pago : "se cobra con"
+    pedido ||--o{ notificacion : "genera aviso"
+    usuario ||--o{ pago : "registra (registrado_por)"
+
+    rol { int id PK
+          varchar nombre UK }
+    usuario { int id PK
+              varchar correo UK
+              varchar password_hash
+              boolean activo
+              int rol_id FK }
+    platillo { int id PK
+               varchar nombre
+               varchar categoria
+               boolean activo }
+    menu_dia { int id PK
+               date fecha
+               int platillo_id FK
+               decimal precio
+               boolean disponible
+               boolean especial }
+    estado_pedido { int id PK
+                    varchar nombre UK
+                    int orden UK }
+    transicion_estado { int desde_id PK
+                        int hacia_id PK }
+    pedido { int id PK
+             varchar numero UK
+             varchar tipo
+             int estado_id FK
+             int usuario_id FK
+             varchar cliente_nombre
+             timestamp fecha_recoleccion
+             decimal total
+             int creado_por FK }
+    pedido_detalle { int id PK
+                     int pedido_id FK
+                     int menu_dia_id FK
+                     int cantidad
+                     decimal precio_unitario
+                     decimal subtotal }
+    pedido_estado_historial { int id PK
+                              int pedido_id FK
+                              int estado_nuevo_id FK
+                              int cambiado_por FK }
+    pago { int id PK
+           int pedido_id UK
+           varchar metodo
+           decimal monto
+           varchar referencia }
+    notificacion { int id PK
+                   int pedido_id FK
+                   varchar tipo
+                   varchar canal
+                   boolean leida }
+```
+
+`schema_migrations` (migración 003) registra las migraciones aplicadas y no se
+relaciona con las demás. `pedido.tipo` es `anticipado` o `mostrador`;
+`pago.metodo` es `online` o `efectivo`.
