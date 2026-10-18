@@ -1,0 +1,13 @@
+
+> backend@1.0.0 test
+> vitest run
+
+
+ RUN  v4.1.11 C:/cafe/Cafeteria/backend
+
+
+ Test Files  12 passed (12)
+      Tests  77 passed (77)
+   Start at  12:27:21
+   Duration  37.87s (transform 951ms, setup 7.88s, import 15.55s, tests 10.05s, environment 2ms)
+

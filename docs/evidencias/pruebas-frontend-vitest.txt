@@ -1,0 +1,13 @@
+
+> frontend@0.0.0 test
+> vitest run
+
+
+ RUN  v4.1.11 C:/cafe/Cafeteria/frontend
+
+
+ Test Files  10 passed (10)
+      Tests  32 passed (32)
+   Start at  12:27:21
+   Duration  50.43s (transform 3.45s, setup 42.73s, import 37.41s, tests 6.50s, environment 390.54s)
+
