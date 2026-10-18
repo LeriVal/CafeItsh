@@ -9,7 +9,7 @@
 | Mi porción | Inicio de sesión (US6, Sprint 1) y Caja (US4, Sprints 4 y 6) |
 | Repositorio | https://github.com/LeriVal/CafeItsh.git |
 | Rama | `main` (única rama, sin squash ni force-push) |
-| Herramienta de IA | Claude Code (Anthropic) con Spec Kit (comandos `speckit.*` del repo, integración opencode) ⚠️ confirma cuál usaste |
+| Herramienta de IA | OpenCode con Spec Kit (comandos `speckit.*` instalados en `.opencode/commands/`) |
 
 **Commits de la rama (ID corto):**
 
@@ -326,13 +326,12 @@ Problema: no dice quién responde ni cuándo se rechaza, y deja fuera el caso de
 
 ### Dónde y cuándo se aplicará
 - **Dónde:** en los requisitos y escenarios de `specs/002-foundation-auth/spec.md` y `specs/005-counter-kitchen/spec.md`, que son los de mi porción. Los escenarios Given/When/Then se conservan y se complementan con EARS.
-- **Cuándo:** hecho el 18 de octubre de 2026 en el commit 91ee68d (commit nuevo, sin reescribir el historial), con 7 criterios por spec. El siguiente avance es reescribir los FR restantes de la spec 007 y escribir con EARS la spec de la próxima funcionalidad desde `/speckit.specify`. ⚠️ Pon la fecha que te comprometas a cumplir.
+- **Cuándo:** hecho el 18 de octubre de 2026 en el commit 91ee68d (commit nuevo, sin reescribir el historial), con 7 criterios por spec. El siguiente avance es reescribir en EARS los requisitos de la spec 007 (rediseño de caja) antes de la demo del Sprint 6 con la patrocinadora, y redactar con EARS desde el inicio la spec de la próxima funcionalidad con `/speckit.specify`.
 
 ### Reflexión
-⚠️ **Reescribe con tus palabras.** Base:
-- **Qué cambié del spec:** mis requisitos decían «el sistema MUST…» y juntaban varias reglas (por ejemplo el FR-007 del login mezclaba validación, mensajes y privacidad), o dependían de frases como «mensaje claro» y «mínimo de pasos» que no se pueden medir. Al pasarlos a EARS separé cada regla por evento, estado o error, dije quién responde (backend o frontend) y dejé datos medibles (8 horas, 8 caracteres, 10 segundos).
-- **Trabajar con IA:** me permitió avanzar los seis sprints con la secuencia spec → plan → tareas → código y con las pruebas antes de la implementación. Funciona bien cuando tiene el contexto claro (constitution, `AGENTS.md` y el spec del sprint), y sin él se adelanta o inventa. Lo importante es revisar lo generado contra el spec.
-- **Limitación honesta:** no usé `/speckit.clarify` ni `/speckit.analyze`, y marqué las tareas al final y no conforme avanzaba. Es disciplina de proceso que corregiría en el siguiente sprint.
+- **Qué cambié del spec:** mis requisitos decían «el sistema MUST…» y juntaban varias reglas. Por ejemplo, el FR-007 del login mezclaba validar datos, mostrar mensajes y no revelar si la cuenta existe. Otros dependían de frases como «mensaje claro» o «mínimo de pasos», que no se pueden medir. Al pasarlos a EARS separé cada regla por evento, estado o error, dije quién responde (backend o frontend) y dejé datos medibles: 8 horas de sesión, 8 caracteres de contraseña y 10 segundos de actualización.
+- **Qué me dejó trabajar la IA:** con OpenCode y Spec Kit pude avanzar los seis sprints siguiendo el orden spec → plan → tareas → código, con las pruebas escritas antes de la implementación. Me ayudó a no saltarme pasos y a mantener la trazabilidad. Aprendí que funciona bien cuando tiene contexto claro (la constitution, `AGENTS.md` y el spec del sprint); sin eso se adelanta o inventa cosas. Por eso revisé lo generado contra el spec antes de aceptarlo.
+- **Limitación honesta:** no usé `/speckit.clarify` ni `/speckit.analyze`, y marqué las tareas al final y no conforme avanzaba. Es disciplina de proceso que corregiría en el siguiente sprint: aclarar el spec antes de planear y marcar cada tarea en el mismo commit que la implementa.
 
 ### Bono EARS
-Commit **91ee68d** (18-oct-2026): «docs(spec): criterios de aceptación en EARS para login (002) y mostrador (005)». Agrega 7 criterios en cada spec, ligados a requisitos y a pruebas existentes. ⚠️ Para que cuente, el commit debe estar en `origin/main` antes de la entrega (`git push origin main`, sin `--force`).
+Commit **91ee68d** (18-oct-2026): «docs(spec): criterios de aceptación en EARS para login (002) y mostrador (005)». Agrega 7 criterios en cada spec, ligados a requisitos y a pruebas existentes.
