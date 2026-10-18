@@ -12,7 +12,7 @@ US5 admin).
 
 ## Phase 1: Setup
 
-- [ ] T001 Backend: `fechaRecoleccion` en `colaCocina` + assert en
+- [x] T001 Backend: `fechaRecoleccion` en `colaCocina` + assert en
   `cocina.test.ts` (único cambio backend)
 
 ---
@@ -21,10 +21,10 @@ US5 admin).
 
 **CRITICAL**: Bloquea las historias de UI.
 
-- [ ] T002 `AppShell` + `Drawer` + `BottomBar` (cliente/caja con badges por
+- [x] T002 `AppShell` + `Drawer` + `BottomBar` (cliente/caja con badges por
   `misAvisos`/`listosCaja` + sondeo) y migrar las 5 áreas, moviendo Salir al
   drawer (tests de navegación: drawer, bottom bar, badges, logout)
-- [ ] T003 Persistencia del carrito en `localStorage` con validación de forma
+- [x] T003 Persistencia del carrito en `localStorage` con validación de forma
   (test: sobrevive recarga simulada; forma corrupta se descarta)
 
 **Checkpoint**: Navegación y carrito listos
@@ -35,16 +35,16 @@ US5 admin).
 
 ### Tests (rojo primero)
 
-- [ ] T004 [P] [US2] `tests/caja-nueva.test.tsx`: inicio con acciones y
+- [x] T004 [P] [US2] `tests/caja-nueva.test.tsx`: inicio con acciones y
   contador; catálogo filtra por texto/categoría con stepper; flotante con
   total; resumen desglosa y cobra en un paso con ticket; entregas listan con
   Entregar/Cancelar
 
 ### Implementation
 
-- [ ] T005 [US2] `CapturaContext` + `InicioCaja` + `NuevoPedido` (búsqueda,
+- [x] T005 [US2] `CapturaContext` + `InicioCaja` + `NuevoPedido` (búsqueda,
   chips, stepper, flotante) (depende de T004)
-- [ ] T006 [US2] `ResumenCobro` (desglose, nombre, monto, un botón, ticket,
+- [x] T006 [US2] `ResumenCobro` (desglose, nombre, monto, un botón, ticket,
   error) + `Entregas` + subrutas `/caja/*` (depende de T004)
 
 **Checkpoint**: Caja rediseñada extremo a extremo
@@ -55,13 +55,13 @@ US5 admin).
 
 ### Tests (rojo primero)
 
-- [ ] T007 [P] [US3] `tests/cliente-rediseno.test.tsx`: menú filtra/busca y
+- [x] T007 [P] [US3] `tests/cliente-rediseno.test.tsx`: menú filtra/busca y
   vacío de filtro; checkout muestra hora mínima y error inline; confirmación
   con folio y ambos CTAs; mis pedidos con contador y CTA nuevo
 
 ### Implementation
 
-- [ ] T008 [US3] Menu (bienvenida, búsqueda, chips) + Checkout (hora mínima
+- [x] T008 [US3] Menu (bienvenida, búsqueda, chips) + Checkout (hora mínima
   visible) + Confirmación (folio grande + CTAs) + MisPedidos (contador + CTA)
   (depende de T007)
 
@@ -71,13 +71,13 @@ US5 admin).
 
 ## Phase 5: User Story 4 - Cocina (Priority: P2)
 
-- [ ] T009 [US4] Cocina: header (contador + actualizado), chip de origen,
+- [x] T009 [US4] Cocina: header (contador + actualizado), chip de origen,
   registro + recogida, retraso en error, partidas ≥20 px, `Listo` visible sin
   CTA, vacíos/errores/conflicto (extender tests de `operacion.test.tsx`)
 
 ## Phase 6: User Story 5 - Admin (Priority: P2)
 
-- [ ] T010 [US5] `Inicio` admin (fecha, 3 conteos, resumen con especiales/no
+- [x] T010 [US5] `Inicio` admin (fecha, 3 conteos, resumen con especiales/no
   disponibles) como índice de `/admin/*`; jerarquía y buscadores en secciones
   existentes (tests de landing)
 

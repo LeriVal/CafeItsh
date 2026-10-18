@@ -10,7 +10,7 @@
 
 ## Phase 1: Setup
 
-- [ ] T001 Verificar `db:migrate` sin pendientes y estados/transiciones
+- [x] T001 Verificar `db:migrate` sin pendientes y estados/transiciones
   sembrados (`SELECT` a `estado_pedido`/`transicion_estado`)
 
 ---
@@ -19,11 +19,11 @@
 
 **CRITICAL**: Bloquea las historias.
 
-- [ ] T002 Crear `backend/src/services/pedidos.ts`: `hoyMx` reutilizable,
+- [x] T002 Crear `backend/src/services/pedidos.ts`: `hoyMx` reutilizable,
   `cambiarEstado` (valida `transicion_estado`, rechaza terminales y saltos,
   escribe historial), folio `A-AAAAMMDD-NNNN` con reintento, transacción con
   `FOR UPDATE`
-- [ ] T003 Crear `backend/src/services/pagos.ts`: interfaz `ProveedorPago`,
+- [x] T003 Crear `backend/src/services/pagos.ts`: interfaz `ProveedorPago`,
   `SimuladorPago` (referencia `SIM-…`), `pagarPedido` (solo desde
   `Pendiente`, inserta `pago`, cambia a `Pagado`, todo transaccional;
   `simularRechazo` solo para tests, sin exponer en API)
@@ -38,14 +38,14 @@
 
 ### Tests (rojo primero)
 
-- [ ] T004 [P] [US1] `backend/tests/integration/pedidos.test.ts`: crear 201
+- [x] T004 [P] [US1] `backend/tests/integration/pedidos.test.ts`: crear 201
   (folio, total = suma precios×cant, congelados, `Pendiente`), <10 min 400
   sin crear, no disponible 400, vacío/cantidad inválida 400, otro cliente
   403/404 en GET, saltos de estado rechazados (vía `cambiarEstado`)
 
 ### Implementation
 
-- [ ] T005 [US1] `controllers/pedidos.ts` (rechazo 400 `CARD_DATA_FORBIDDEN`
+- [x] T005 [US1] `controllers/pedidos.ts` (rechazo 400 `CARD_DATA_FORBIDDEN`
   ante campos de tarjeta) + `routes/pedidos.ts` (`POST /`, `GET /:id` con
   dueño o admin) y montar en `app.ts` (depende de T004)
 
@@ -60,13 +60,13 @@ duplicar; doble pago imposible.
 
 ### Tests (rojo primero)
 
-- [ ] T006 [P] [US2] extender `pedidos.test.ts`: pagar 200 (`Pagado` +
+- [x] T006 [P] [US2] extender `pedidos.test.ts`: pagar 200 (`Pagado` +
   referencia, fila `pago`), rechazo simulado (sigue `Pendiente`, reintento
   posterior OK sin duplicado), segundo pago 409, campos de tarjeta 400
 
 ### Implementation
 
-- [ ] T007 [US2] `POST /:id/pagar` en controller + ruta (dueño o admin),
+- [x] T007 [US2] `POST /:id/pagar` en controller + ruta (dueño o admin),
   `PAYMENT_API_KEY` reservada en `.env.example` (depende de T006)
 
 **Checkpoint**: Flujo dinero (simulado) cerrado
@@ -79,18 +79,18 @@ duplicar; doble pago imposible.
 
 ### Tests (rojo primero)
 
-- [ ] T008 [P] [US3] `frontend/tests/carrito.test.tsx` (fetch simulado):
+- [x] T008 [P] [US3] `frontend/tests/carrito.test.tsx` (fetch simulado):
   agregar/quitar con total informativo, no disponible sin control, checkout
   exige recogida ≥10 min (mensaje), confirmación muestra folio/estado/total
 
 ### Implementation
 
-- [ ] T009 [US3] `lib/carrito.tsx` (CartContext) + steppers y barra en
+- [x] T009 [US3] `lib/carrito.tsx` (CartContext) + steppers y barra en
   `pages/clientes/Menu.tsx` (solo disponibles) (depende de T008)
-- [ ] T010 [US3] `pages/clientes/Checkout.tsx` (`/pedido/nuevo`: recogida
+- [x] T010 [US3] `pages/clientes/Checkout.tsx` (`/pedido/nuevo`: recogida
   `datetime-local` con mínimo +10 min, resumen, pagar, manejo de
   rechazo/reintento) (depende de T008)
-- [ ] T011 [US3] `pages/clientes/Confirmacion.tsx` (`/pedido/:id`: folio,
+- [x] T011 [US3] `pages/clientes/Confirmacion.tsx` (`/pedido/:id`: folio,
   detalle, total, recogida, estado) + rutas en `App.tsx` (depende de T008)
 
 **Checkpoint**: Flujo completo visible
@@ -99,11 +99,11 @@ duplicar; doble pago imposible.
 
 ## Phase 6: Polish
 
-- [ ] T012 [P] `npm test` + `typecheck` en verde (ambos)
-- [ ] T013 Ejecutar `quickstart.md` §3 (demo manual SC-001…SC-006)
-- [ ] T014 Auto-revisión: totales servidor, sin tarjetas en logs/respuestas,
+- [x] T012 [P] `npm test` + `typecheck` en verde (ambos)
+- [x] T013 Ejecutar `quickstart.md` §3 (demo manual SC-001…SC-006)
+- [x] T014 Auto-revisión: totales servidor, sin tarjetas en logs/respuestas,
   folio único, historial de estados, mensajes claros
-- [ ] T015 Marcar Sprint 3 en `docs/sprints.md` solo tras demo aprobada
+- [x] T015 Marcar Sprint 3 en `docs/sprints.md` solo tras demo aprobada
 
 ## Dependencies & Execution Order
 

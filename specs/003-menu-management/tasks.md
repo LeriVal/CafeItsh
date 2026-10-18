@@ -14,7 +14,7 @@ TDD: tests primero en rojo.
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-- [ ] T001 Verificar `npm run db:migrate` sin pendientes y menú de ejemplo de
+- [x] T001 Verificar `npm run db:migrate` sin pendientes y menú de ejemplo de
   hoy presente (seed 002); si falta, documentar causa (R1)
 
 ---
@@ -23,10 +23,10 @@ TDD: tests primero en rojo.
 
 **CRITICAL**: Bloquea todas las historias.
 
-- [ ] T002 Crear `backend/src/services/platillos.ts` (listar con filtro
+- [x] T002 Crear `backend/src/services/platillos.ts` (listar con filtro
   activos, crear, actualizar incl. `activo`; sin DELETE) + validaciones en
   `utils/validate.ts` (nombre ≤100, categoría ≤50)
-- [ ] T003 Crear `backend/src/services/menu.ts` (`hoyMx()` con
+- [x] T003 Crear `backend/src/services/menu.ts` (`hoyMx()` con
   America/Mexico_City, `parseFecha`, CRUD de líneas, UNIQUE→409,
   platillo inactivo→400, FK 1451→409 REFERENCIADO)
 
@@ -42,16 +42,16 @@ TDD: tests primero en rojo.
 
 ### Tests (primero, en rojo)
 
-- [ ] T004 [P] [US1] `backend/tests/integration/platillos.test.ts`: crear 201,
+- [x] T004 [P] [US1] `backend/tests/integration/platillos.test.ts`: crear 201,
   editar 200, desactivar y verificar exclusión con `?activos=true`, 400 nombre
   vacío, 403 cliente, 401 sin token, 404 inexistente
 
 ### Implementation
 
-- [ ] T005 [US1] `controllers/platillos.ts` + `routes/platillos.ts`
+- [x] T005 [US1] `controllers/platillos.ts` + `routes/platillos.ts`
   (`GET` con sesión, `POST/PATCH` con admin) y montar en `app.ts`
   (depende de T004)
-- [ ] T006 [US1] `frontend/src/pages/admin/Platillos.tsx`: tabla + crear +
+- [x] T006 [US1] `frontend/src/pages/admin/Platillos.tsx`: tabla + crear +
   editar + activar/desactivar con mensajes de error en línea (depende de T005)
 
 **Checkpoint**: US1 cerrada de extremo a extremo
@@ -68,19 +68,19 @@ rechazado (SC-001, SC-002, SC-005).
 
 ### Tests (primero, en rojo)
 
-- [ ] T007 [P] [US2] `backend/tests/integration/menu.test.ts`: publicar línea
+- [x] T007 [P] [US2] `backend/tests/integration/menu.test.ts`: publicar línea
   201, reflejo en GET, PATCH precio/disponibilidad, duplicado 409, precio 0 →
   400, platillo inactivo → 400, DELETE 204 + 404, fecha inválida 400, 403
   cliente en mutación
 
 ### Implementation
 
-- [ ] T008 [US2] `controllers/menu.ts` + `routes/menu.ts` y montar en `app.ts`
+- [x] T008 [US2] `controllers/menu.ts` + `routes/menu.ts` y montar en `app.ts`
   (depende de T007)
-- [ ] T009 [US2] `frontend/src/pages/admin/MenuDia.tsx`: selector de fecha
+- [x] T009 [US2] `frontend/src/pages/admin/MenuDia.tsx`: selector de fecha
   (hoy por defecto), agregar línea (solo platillos activos), edición en línea
   de precio/disponibilidad/especial, quitar línea (depende de T008)
-- [ ] T010 [US2] `frontend/src/pages/admin/AdminNav.tsx` + subrutas en
+- [x] T010 [US2] `frontend/src/pages/admin/AdminNav.tsx` + subrutas en
   `App.tsx` (`/admin/usuarios`, `/admin/platillos`, `/admin/menu`;
   `/admin` → `/admin/platillos`) (R7)
 
@@ -97,13 +97,13 @@ mensaje de día sin menú.
 
 ### Tests (primero, en rojo)
 
-- [ ] T011 [P] [US3] `frontend/tests/menu.test.tsx` (fetch simulado): estado
+- [x] T011 [P] [US3] `frontend/tests/menu.test.tsx` (fetch simulado): estado
   de carga, día sin líneas (mensaje claro), líneas con precio, distintivo de
   especial y no disponible no seleccionable
 
 ### Implementation
 
-- [ ] T012 [US3] `frontend/src/lib/menu.ts` (tipos + `fetchMenu(fecha?)`) +
+- [x] T012 [US3] `frontend/src/lib/menu.ts` (tipos + `fetchMenu(fecha?)`) +
   `frontend/src/pages/clientes/Menu.tsx` (tarjetas móvil-first, badge
   especial, estilo no disponible, mensaje sin menú) y ruta `/menu` a la nueva
   página (depende de T011)
@@ -114,12 +114,12 @@ mensaje de día sin menú.
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T013 [P] `npm test` + `typecheck` en verde (backend y frontend)
-- [ ] T014 Ejecutar `quickstart.md` §3 completo (incl. demo manual SC-001…005)
+- [x] T013 [P] `npm test` + `typecheck` en verde (backend y frontend)
+- [x] T014 Ejecutar `quickstart.md` §3 completo (incl. demo manual SC-001…005)
   y corregir desvíos
-- [ ] T015 Auto-revisión: sin secretos, respuestas sin columnas internas,
+- [x] T015 Auto-revisión: sin secretos, respuestas sin columnas internas,
   mensajes claros, `price` serializado consistente (string NUMERIC de mysql2)
-- [ ] T016 Marcar Sprint 2 como completado en `docs/sprints.md` solo tras demo
+- [x] T016 Marcar Sprint 2 como completado en `docs/sprints.md` solo tras demo
   aprobada
 
 ---
